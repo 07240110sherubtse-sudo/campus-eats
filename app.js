@@ -10,14 +10,23 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Static files (CSS, client-side JS)
+// Middleware
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Campus Eats running at http://localhost:${PORT}`);
+// Database
+const db = require('./config/db');
+
+app.get('/db-test', async (req, res) => {
+    const result = await db.one('SELECT NOW() AS current_time');
+    res.json(result);
 });
-app.use(express.urlencoded({ extended: true }));
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Campus Eats running at http://localhost:${PORT}`);
+});
