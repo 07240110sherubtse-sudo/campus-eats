@@ -12,6 +12,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
@@ -30,3 +31,6 @@ app.get('/db-test', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Campus Eats running at http://localhost:${PORT}`);
 });
+
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
