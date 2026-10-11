@@ -46,3 +46,13 @@ router.get('/forgot-password', authController.showForgotPassword);
 router.post('/forgot-password', authController.forgotPassword);
 router.get('/reset-password/:token', authController.showResetPassword);
 router.post('/reset-password/:token', authController.resetPassword);
+
+const { connectMongo } = require('../config/mongo');
+
+router.get('/mongo-test', async (req, res) => {
+  const db = await connectMongo();
+  const collections = await db.listCollections().toArray();
+  res.json({ connected: true, collections });
+});
+
+router.post('/restaurants/:id/feedback', feedbackController.submitFeedback);

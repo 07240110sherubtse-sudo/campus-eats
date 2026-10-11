@@ -49,3 +49,6 @@ app.get('/db-test', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Campus Eats running at http://localhost:${PORT}`);
 });
+
+const { connectMongo } = require('./config/mongo');
+connectMongo().catch(err => console.error('MongoDB connection failed:', err));
