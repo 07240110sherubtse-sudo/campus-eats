@@ -43,9 +43,9 @@ app.use('/', indexRoutes);
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
+if (process.env.NODE_ENV !== 'test') {
+  connectMongo().catch(err => console.error('MongoDB connection failed:', err));
+}
 
-
-app.listen(PORT, () => {
-  console.log(`Campus Eats running at http://localhost:${PORT}`);
-});
+module.exports = app;
 

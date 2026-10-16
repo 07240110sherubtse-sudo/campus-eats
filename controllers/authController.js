@@ -6,19 +6,13 @@ const {
   sendPasswordResetEmail
 } = require('../config/mailer');
 
-const EMAIL_SUFFIX = '.sherubtse@rub.edu.bt';
-
-
-
-
+const EMAIL_SUFFIX = '.@gmail.com';
 exports.showSignup = (req, res) => {
   res.render('signup', {
     title: 'Sign Up',
     error: null
   });
 };
-
-
 exports.signup = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -63,8 +57,6 @@ exports.signup = async (req, res) => {
 };
 
 
-
-
 exports.verifyEmail = async (req, res) => {
   const user = await User.markVerified(req.params.token);
 
@@ -79,9 +71,6 @@ exports.verifyEmail = async (req, res) => {
     user
   });
 };
-
-
-
 
 exports.showLogin = (req, res) => {
   res.render('login', {
@@ -102,14 +91,12 @@ exports.login = async (req, res) => {
       error: 'Incorrect email or password.'
     });
   }
-
   if (!user.is_verified) {
     return res.render('login', {
       title: 'Log In',
       error: 'Please verify your email before logging in.'
     });
   }
-
   req.session.user = {
     id: user.id,
     name: user.name,
@@ -123,7 +110,6 @@ exports.login = async (req, res) => {
   if (user.role === 'admin') {
     return res.redirect('/admin/dashboard');
   }
-
   res.redirect('/');
 };
 
@@ -135,8 +121,6 @@ exports.logout = (req, res) => {
     res.redirect('/');
   });
 };
-
-
 
 
 exports.showForgotPassword = (req, res) => {
