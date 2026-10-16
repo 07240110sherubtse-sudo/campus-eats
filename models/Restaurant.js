@@ -1,17 +1,23 @@
-const db = require('../config/db');
-
+const db = require('../config/db');  
 exports.getAllRestaurants = () => {
-  return db.any(
-    'SELECT * FROM restaurants WHERE is_active = true ORDER BY id'
-  );
+  return db.any('SELECT * FROM restaurants WHERE is_active = true ORDER BY id');
 };
-
+ 
 exports.getRestaurantById = (id) => {
   return db.oneOrNone(
     'SELECT * FROM restaurants WHERE id = $1 AND is_active = true',
     [id]
   );
 };
+
+
+exports.getRestaurantByOwnerId = (ownerId) => {
+    return db.oneOrNone(
+        'SELECT * FROM restaurants WHERE owner_id = $1 AND is_active = true',
+        [ownerId]
+    );
+};
+
 
 exports.getAllRestaurantsForAdmin = () => {
   return db.any('SELECT * FROM restaurants ORDER BY id');
@@ -25,17 +31,5 @@ exports.createRestaurantBySuperAdmin = ({ name, cuisine }) => {
 };
 
 exports.deactivateRestaurant = (id) => {
-  return db.none(
-    'UPDATE restaurants SET is_active = false WHERE id = $1',
-    [id]
-  );
-};
-
-exports.getRestaurantByOwnerId = (ownerId) => {
-
-  return db.oneOrNone(
-    'SELECT * FROM restaurants WHERE owner_id = $1 AND is_active = true',
-    [ownerId]
-  );
-
+  return db.none('UPDATE restaurants SET is_active = false WHERE id = $1', [id]);
 };

@@ -18,12 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
 
       if (!response.ok) {
-        result.textContent = data.error;
+        result.textContent = data.error || 'Order not found';
         return;
       }
 
       const total = (data.price_at_order * data.quantity).toFixed(2);
-      result.textContent = `${data.item_name} × ${data.quantity} — Nu. ${total} (${data.status})`;
+
+      result.textContent =
+        `${data.item_name} × ${data.quantity} — Nu. ${total} (${data.status})`;
+
     } catch (err) {
       result.textContent = 'Something went wrong. Try again.';
     }

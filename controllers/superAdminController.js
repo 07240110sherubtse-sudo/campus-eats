@@ -31,6 +31,7 @@ exports.grantAdmin = async (req, res) => {
       error: `No account found for ${email} — they need to sign up first.`,
     });
   }
+
   await User.promoteToAdmin(user.id, restaurantId);
   res.redirect('/superadmin/dashboard');
 };

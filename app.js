@@ -1,9 +1,12 @@
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
-const session = require('express-session');
-
 dotenv.config();
+
+
+const { connectMongo } = require('./config/mongo');
+connectMongo().catch(err => console.error('MongoDB connection failed:', err));
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,23 +15,26 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware
+// Static files (CSS, client-side JS)
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-// Session middleware
+const session = require('express-session');
+
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'campus-eats-dev-secret',
-    resave: false,
-    saveUninitialized: false
+  secret: process.env.SESSION_SECRET || 'campus-eats-dev-secret',
+  resave: false,
+  saveUninitialized: false,
 }));
 
-// Make the logged-in user available to every EJS view
+// Make the logged-in user available to every view, without passing it manually every time
 app.use((req, res, next) => {
-    res.locals.user = req.session.user || null;
-    next();
+  res.locals.user = req.session.user || null;
+  next();
 });
+
+
 
 // Routes
 const indexRoutes = require('./routes/index');
@@ -37,18 +43,9 @@ app.use('/', indexRoutes);
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
-// Database
-const db = require('./config/db');
 
-app.get('/db-test', async (req, res) => {
-    const result = await db.one('SELECT NOW() AS current_time');
-    res.json(result);
-});
 
-// Start server
 app.listen(PORT, () => {
-    console.log(`Campus Eats running at http://localhost:${PORT}`);
+  console.log(`Campus Eats running at http://localhost:${PORT}`);
 });
 
-const { connectMongo } = require('./config/mongo');
-connectMongo().catch(err => console.error('MongoDB connection failed:', err));

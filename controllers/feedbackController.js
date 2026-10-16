@@ -1,4 +1,3 @@
-touch controllers/feedbackController.js
 const Feedback = require('../models/Feedback');
 const Restaurant = require('../models/Restaurant');
 
@@ -16,6 +15,7 @@ exports.submitFeedback = async (req, res) => {
   if (!customerName || !numericRating || numericRating < 1 || numericRating > 5) {
     return res.redirect(`/restaurants/${restaurantId}/menu`);
   }
-   await Feedback.createFeedback({ restaurantId, customerName, rating: numericRating, comment });
+
+  await Feedback.createFeedback({ restaurantId, customerName, rating: numericRating, comment });
   res.redirect(`/restaurants/${restaurantId}/menu`);
 };

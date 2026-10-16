@@ -40,6 +40,7 @@ exports.createOrder = async (req, res) => {
   res.status(201).json(order);
 };
 
+
 exports.getStats = async (req, res) => {
   const stats = await Order.getStats();
   const popularItems = await Order.getPopularItems();

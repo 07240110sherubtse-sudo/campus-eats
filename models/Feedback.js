@@ -1,22 +1,29 @@
-const { connectMongo } = require('./mongo');
+const { getDb } = require('../config/mongo');
 
-async function createFeedback({ restaurantId, customerName, rating, comment }) {
-     const db = await connectMongo();
-  return db.collection('feedback').insertOne({
-    restaurantId: Number(restaurantId),
-    customerName,
-    rating: Number(rating),
-    comment: comment || '',
-    createdAt: new Date(),
-  });
-}
+exports.createFeedback = async (data) => {
+    const db = getDb();
 
-async function getFeedbackForRestaurant(restaurantId) {
-  const db = await connectMongo();
-  return db.collection('feedback')
-    .find({ restaurantId: Number(restaurantId) })
-    .sort({ createdAt: -1 })
-    .toArray();
-}
+    const feedback = {
+        restaurantId: Number(data.restaurantId),
+        customerName: data.customerName,
+        rating: Number(data.rating),
+        comment: data.comment || '',
+        createdAt: new Date()
+    };
 
-module.exports = { createFeedback, getFeedbackForRestaurant };
+    const result = await db.collection('feedback').insertOne(feedback);
+
+    return {
+        _id: result.insertedId,
+        ...feedback
+    };
+};
+
+exports.getFeedbackForRestaurant = async (restaurantId) => {
+    const db = getDb();
+
+    return await db.collection('feedback')
+        .find({ restaurantId: Number(restaurantId) })
+        .sort({ createdAt: -1 })
+        .toArray();
+};

@@ -37,6 +37,8 @@ async function promoteToAdmin(userId, restaurantId) {
 
 module.exports.promoteToAdmin = promoteToAdmin;
 
+
+
 async function setResetToken(email, token, expires) {
   return db.oneOrNone(
     `UPDATE users SET reset_token = $1, reset_token_expires = $2
